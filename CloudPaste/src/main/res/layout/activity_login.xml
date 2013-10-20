@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+            />
+
+            <EditText
+                android:id="@+id/LoginUsernameEditText"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="8"
+                android:textSize="18dp"
+                android:hint="@string/login_username_hint"
+                android:textColorHint="@color/edit_text_hint"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+            />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+            />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+            />
+
+            <EditText
+                android:id="@+id/LoginPasswordEditText"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_weight="8"
+                android:textSize="18dp"
+                android:hint="@string/login_password_hint"
+                android:textColorHint="@color/edit_text_hint"
+                android:singleLine="true"
+                android:password="true"
+                android:imeOptions="actionSend"
+            />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+            />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/LoginButton"
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="18dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/login_button"
+        />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/LoginPassportLayout"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="18dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/LoginPassportTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_passport_install_message"
+            android:gravity="center"
+        />
+
+        <Button
+            android:id="@+id/LoginPassportButton"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="18dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/login_passport_install"
+        />
+    </LinearLayout>
+</RelativeLayout>

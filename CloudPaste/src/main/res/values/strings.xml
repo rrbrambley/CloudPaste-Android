@@ -7,4 +7,13 @@
     <string name="menu_delete">Delete All</string>
     <string name="menu_sign_out">Sign Out</string>
 
+    <string name="login_username_hint">Username or email</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_button">Sign in</string>
+    <string name="login_passport_progress">Authorizing with App.net Passport</string>
+    <string name="login_passport_install_progress">Waiting for Passport to install...</string>
+    <string name="login_passport_login">Sign in with Passport</string>
+    <string name="login_passport_install">Install App.net Passport</string>
+    <string name="login_passport_install_message">Need an Account? Create one with App.net Passport</string>
+
 </resources>
