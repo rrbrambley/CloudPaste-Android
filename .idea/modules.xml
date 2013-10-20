@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLib.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLibModule/ADNLibModule.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLibModule/ADNLibModule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLibUtils.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLibUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CloudPaste/CloudPaste.iml" filepath="$PROJECT_DIR$/CloudPaste/CloudPaste.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CloudPasteProject.iml" filepath="$PROJECT_DIR$/CloudPasteProject.iml" />
+    </modules>
+  </component>
+</project>
+

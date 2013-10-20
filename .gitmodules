@@ -1,0 +1,3 @@
+[submodule "ADNLibUtils"]
+	path = ADNLibUtils
+	url = git@github.com:rrbrambley/ADNLibUtils.git
