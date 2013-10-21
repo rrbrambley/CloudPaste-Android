@@ -19,4 +19,5 @@
     <string name="login_passport_install">Install App.net Passport</string>
     <string name="login_passport_install_message">Need an Account? Create one with App.net Passport</string>
 
+    <string name="copied_toast">Text copied to clipboard.</string>
 </resources>

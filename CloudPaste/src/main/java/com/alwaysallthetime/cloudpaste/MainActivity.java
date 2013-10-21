@@ -1,10 +1,16 @@
 package com.alwaysallthetime.cloudpaste;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -44,6 +50,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mListView = (ListView) findViewById(R.id.MainListView);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MessagePlus item = mListAdapter.getItem(position);
+                copyText(item.getMessage().getText());
+            }
+        });
         mHandler = new Handler();
         mClient = CloudPasteADNClient.getInstance();
 
@@ -129,6 +142,19 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    private void copyText(String text) {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(text);
+        } else {
+            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("CloudPaste text", text);
+            clipboard.setPrimaryClip(clip);
+        }
+
+        Toast.makeText(this, R.string.copied_toast, Toast.LENGTH_SHORT).show();
     }
 
     private final MessageManager.MessageManagerResponseHandler mMessageManagerResponseHandler = new MessageManager.MessageManagerResponseHandler() {
