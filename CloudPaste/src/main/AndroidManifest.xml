@@ -24,11 +24,6 @@
         </activity>
 
         <activity
-            android:name="com.alwaysallthetime.cloudpaste.LoginActivity"
-            android:label="@string/login_label" >
-        </activity>
-
-        <activity
             android:name="com.alwaysallthetime.cloudpaste.LoginWebViewActivity"
             android:label="@string/login_label" >
         </activity>
