@@ -5,12 +5,16 @@ import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
 import com.alwaysallthetime.adnlibutils.ConfigurationUtility;
 
 public class CloudPasteADNClient {
-    public static final String CLIENT_ID = "ApLZCN8QxnG2D54JcnUkUApH88nLHZeC";
+    //stick a client id here.
+    public static final String CLIENT_ID = null;
     public static final String AUTH_SCOPES = "basic,messages";
 
     private static AppDotNetClient sInstance;
 
     public static AppDotNetClient getInstance() {
+        if(CLIENT_ID == null) {
+            throw new RuntimeException("You gosta specify a value for CloudPasteADNClient.CLIENT_ID, bro.");
+        }
         if(sInstance == null) {
             sInstance = new AppDotNetClient();
 
