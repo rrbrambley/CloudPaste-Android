@@ -1,7 +1,5 @@
 package com.alwaysallthetime.cloudpaste;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +11,7 @@ import com.alwaysallthetime.adnlib.response.MessageResponseHandler;
 import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
 import com.alwaysallthetime.cloudpaste.client.CloudPasteADNClient;
 
-public class ShareToCloudPasteActivity extends Activity {
+public class ShareToCloudPasteActivity extends BaseCloudPasteActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,13 +62,5 @@ public class ShareToCloudPasteActivity extends Activity {
             Toast.makeText(this, R.string.generic_error, Toast.LENGTH_LONG).show();
             finish();
         }
-    }
-
-    private void showProgress(final int messageResourceId) {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getString(messageResourceId));
-        progressDialog.setCancelable(true);
-        progressDialog.setIndeterminate(true);
-        progressDialog.show();
     }
 }

@@ -1,14 +1,16 @@
 package com.alwaysallthetime.cloudpaste;
 
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -26,7 +28,7 @@ import com.alwaysallthetime.cloudpaste.client.CloudPasteADNClient;
 
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseCloudPasteActivity {
 
     private static final String TAG = "CloudPaste_MainActivity";
 
@@ -92,6 +94,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void onError(Exception error) {
                                 showErrorToast();
+                                mHandler.post(completionRunnable);
                             }
                         });
                     } else {
@@ -103,6 +106,7 @@ public class MainActivity extends Activity {
                 @Override
                 public void onError(Exception error) {
                     showErrorToast();
+                    mHandler.post(completionRunnable);
                 }
             });
         } else {
@@ -143,6 +147,66 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        int itemId = item.getItemId();
+        if(itemId == R.id.MenuDeleteAll) {
+            confirmDeleteAll();
+        } else if(itemId == R.id.MenuRefresh) {
+
+        } else if(itemId == R.id.MenuSignOut) {
+
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
+
+    private void confirmDeleteAll() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle(R.string.delete_all_title)
+                .setMessage(R.string.delete_all_message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteAll();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, null)
+                .show();
+
+    }
+
+    private void deleteAll() {
+        showProgress(R.string.delete_progress);
+        PrivateChannelUtility.unsubscribe(mClient, mCloudPasteChannel, new PrivateChannelUtility.PrivateChannelHandler() {
+            @Override
+            public void onResponse(Channel channel) {
+                initChannel(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        if(mCloudPasteChannel != null) { //this indicates success, else failure
+                            mListAdapter = null;
+                            mMessageManager.setParameters(mCloudPasteChannel.getId(), QUERY_PARAMETERS);
+                            mMessageManager.retrieveNewestMessages(mCloudPasteChannel.getId(), mMessageManagerResponseHandler);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception error) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        showErrorToast();
+                    }
+                });
+            }
+        });
     }
 
     private void copyText(String text) {
