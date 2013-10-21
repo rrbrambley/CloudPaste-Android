@@ -27,8 +27,13 @@ public class MainListViewAdapter extends ArrayAdapter<MessagePlus> {
     }
 
     public void prependAndRefresh(List<MessagePlus> items) {
-        mMessages.addAll(0, items);
+        mMessages.addAll(0,items);
         notifyDataSetChanged();
+    }
+
+    public void removeItemAt(int position) {
+        mMessages.remove(position);
+        notifyDataSetChanged();;
     }
 
     @Override
@@ -41,7 +46,7 @@ public class MainListViewAdapter extends ArrayAdapter<MessagePlus> {
         return convertView;
     }
 
-    private class MainListViewAdapterLayout extends LinearLayout {
+    public class MainListViewAdapterLayout extends LinearLayout {
 
         TextView mTextView;
 

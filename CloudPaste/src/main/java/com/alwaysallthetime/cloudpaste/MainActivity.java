@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,9 @@ import com.alwaysallthetime.adnlib.AppDotNetClient;
 import com.alwaysallthetime.adnlib.GeneralParameter;
 import com.alwaysallthetime.adnlib.QueryParameters;
 import com.alwaysallthetime.adnlib.data.Channel;
+import com.alwaysallthetime.adnlib.data.File;
+import com.alwaysallthetime.adnlib.data.Message;
+import com.alwaysallthetime.adnlib.response.FileResponseHandler;
 import com.alwaysallthetime.adnlibutils.MessagePlus;
 import com.alwaysallthetime.adnlibutils.PrivateChannelUtility;
 import com.alwaysallthetime.adnlibutils.manager.MessageManager;
@@ -58,6 +62,8 @@ public class MainActivity extends BaseCloudPasteActivity {
                 copyText(item.getMessage().getText());
             }
         });
+        registerForContextMenu(mListView);
+
         mHandler = new Handler();
         mClient = CloudPasteADNClient.getInstance();
 
@@ -146,6 +152,50 @@ public class MainActivity extends BaseCloudPasteActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.list_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if(itemId == R.id.MenuDelete) {
+            final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            final MessagePlus m = mListAdapter.getItem(info.position);
+
+            showProgress(R.string.delete_progress);
+            Message message = m.getMessage();
+
+            mMessageManager.deleteMessage(message, new MessageManager.MessageDeletionResponseHandler() {
+                @Override
+                public void onSuccess() {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideProgress();
+                            mListAdapter.removeItemAt(info.position);
+                        }
+                    });
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    Log.d(TAG, exception.getMessage(), exception);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            hideProgress();
+                            Toast.makeText(MainActivity.this, R.string.generic_error, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+        }
         return true;
     }
 
