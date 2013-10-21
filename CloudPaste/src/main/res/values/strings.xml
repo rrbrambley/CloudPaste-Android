@@ -4,6 +4,7 @@
     <string name="app_name">CloudPaste</string>
     <string name="login_label">Sign In</string>
 
+    <string name="menu_refresh">Refresh</string>
     <string name="menu_delete">Delete All</string>
     <string name="menu_sign_out">Sign Out</string>
 
