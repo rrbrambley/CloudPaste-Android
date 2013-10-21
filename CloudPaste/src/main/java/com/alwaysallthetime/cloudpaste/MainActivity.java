@@ -29,7 +29,6 @@ import java.util.List;
 public class MainActivity extends Activity {
 
     private static final String TAG = "CloudPaste_MainActivity";
-    private static final String CLOUDPASTE_CHANNEL_TYPE = "com.alwaysallthetime.cloudpaste";
 
     public static final QueryParameters QUERY_PARAMETERS =
             new QueryParameters(GeneralParameter.INCLUDE_MESSAGE_ANNOTATIONS,
@@ -63,7 +62,7 @@ public class MainActivity extends Activity {
         initChannel(new Runnable() {
             @Override
             public void run() {
-                initMessageManager(PrivateChannelUtility.getChannel(CLOUDPASTE_CHANNEL_TYPE));
+                initMessageManager(PrivateChannelUtility.getChannel(CloudPaste.CLOUDPASTE_CHANNEL_TYPE));
 
                 final String channelId = mCloudPasteChannel.getId();
                 final List<MessagePlus> messages = mMessageManager.getMessageList(channelId);
@@ -77,13 +76,13 @@ public class MainActivity extends Activity {
     }
 
     private void initChannel(final Runnable completionRunnable) {
-        mCloudPasteChannel = PrivateChannelUtility.getChannel(CLOUDPASTE_CHANNEL_TYPE);
+        mCloudPasteChannel = PrivateChannelUtility.getChannel(CloudPaste.CLOUDPASTE_CHANNEL_TYPE);
         if(mCloudPasteChannel == null) {
-            PrivateChannelUtility.retrieveChannel(mClient, CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelHandler() {
+            PrivateChannelUtility.retrieveChannel(mClient, CloudPaste.CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelHandler() {
                 @Override
                 public void onResponse(Channel channel) {
                     if(channel == null) {
-                        PrivateChannelUtility.createChannel(mClient, CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelHandler() {
+                        PrivateChannelUtility.createChannel(mClient, CloudPaste.CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelHandler() {
                             @Override
                             public void onResponse(Channel channel) {
                                 mCloudPasteChannel = channel;
@@ -106,6 +105,8 @@ public class MainActivity extends Activity {
                     showErrorToast();
                 }
             });
+        } else {
+            mHandler.post(completionRunnable);
         }
     }
 
