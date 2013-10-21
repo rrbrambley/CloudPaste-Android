@@ -19,4 +19,6 @@
     <string name="delete_progress">Deleting...</string>
     <string name="delete_all_title">Delete All Items</string>
     <string name="delete_all_message">Are you sure you want to delete all items?</string>
+
+    <string name="refresh_progess">Refreshing...</string>
 </resources>

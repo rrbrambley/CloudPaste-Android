@@ -21,9 +21,7 @@ import com.alwaysallthetime.adnlib.AppDotNetClient;
 import com.alwaysallthetime.adnlib.GeneralParameter;
 import com.alwaysallthetime.adnlib.QueryParameters;
 import com.alwaysallthetime.adnlib.data.Channel;
-import com.alwaysallthetime.adnlib.data.File;
 import com.alwaysallthetime.adnlib.data.Message;
-import com.alwaysallthetime.adnlib.response.FileResponseHandler;
 import com.alwaysallthetime.adnlibutils.MessagePlus;
 import com.alwaysallthetime.adnlibutils.PrivateChannelUtility;
 import com.alwaysallthetime.adnlibutils.manager.MessageManager;
@@ -205,7 +203,7 @@ public class MainActivity extends BaseCloudPasteActivity {
         if(itemId == R.id.MenuDeleteAll) {
             confirmDeleteAll();
         } else if(itemId == R.id.MenuRefresh) {
-
+            refresh();
         } else if(itemId == R.id.MenuSignOut) {
 
         }
@@ -248,6 +246,35 @@ public class MainActivity extends BaseCloudPasteActivity {
 
             @Override
             public void onError(Exception error) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        showErrorToast();
+                    }
+                });
+            }
+        });
+    }
+
+    private void refresh() {
+        showProgress(R.string.refresh_progess);
+        mMessageManager.clearMessages(mCloudPasteChannel.getId());
+        mMessageManager.retrieveNewestMessages(mCloudPasteChannel.getId(), new MessageManager.MessageManagerResponseHandler() {
+            @Override
+            public void onSuccess(final List<MessagePlus> responseData, final boolean appended) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        hideProgress();
+                        mListAdapter = null;
+                        updateListAdapter(responseData, appended);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception exception) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
