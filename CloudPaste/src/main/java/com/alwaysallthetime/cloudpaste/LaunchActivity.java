@@ -16,7 +16,7 @@ public class LaunchActivity extends Activity {
         if(ADNSharedPreferences.isLoggedIn()) {
             intent = new Intent(this, MainActivity.class);
         } else {
-            intent = new Intent(this, LoginActivity.class);
+            intent = new Intent(this, LoginWebViewActivity.class);
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
