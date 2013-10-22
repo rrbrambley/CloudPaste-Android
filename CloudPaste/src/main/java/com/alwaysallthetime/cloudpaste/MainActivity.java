@@ -5,6 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import com.alwaysallthetime.adnlib.GeneralParameter;
 import com.alwaysallthetime.adnlib.QueryParameters;
 import com.alwaysallthetime.adnlib.data.Channel;
 import com.alwaysallthetime.adnlib.data.Message;
+import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
 import com.alwaysallthetime.adnlibutils.MessagePlus;
 import com.alwaysallthetime.adnlibutils.PrivateChannelUtility;
 import com.alwaysallthetime.adnlibutils.manager.MessageManager;
@@ -205,7 +207,7 @@ public class MainActivity extends BaseCloudPasteActivity {
         } else if(itemId == R.id.MenuRefresh) {
             refresh();
         } else if(itemId == R.id.MenuSignOut) {
-
+            signOut();
         }
         return super.onMenuItemSelected(featureId, item);
     }
@@ -284,6 +286,18 @@ public class MainActivity extends BaseCloudPasteActivity {
                 });
             }
         });
+    }
+
+    private void signOut() {
+        if(mCloudPasteChannel != null) {
+            ADNSharedPreferences.deletePrivateChannel(mCloudPasteChannel);
+            mMessageManager.clearMessages(mCloudPasteChannel.getId());
+        }
+        PrivateChannelUtility.clearChannels();
+        ADNSharedPreferences.clearCredentials();
+        Intent intent = new Intent(this, LoginWebViewActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void copyText(String text) {
