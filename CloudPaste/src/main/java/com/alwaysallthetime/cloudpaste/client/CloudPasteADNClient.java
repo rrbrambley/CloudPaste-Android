@@ -1,6 +1,7 @@
 package com.alwaysallthetime.cloudpaste.client;
 
 import com.alwaysallthetime.adnlib.AppDotNetClient;
+import com.alwaysallthetime.adnlibutils.ADNApplication;
 import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
 import com.alwaysallthetime.adnlibutils.ConfigurationUtility;
 
@@ -16,7 +17,7 @@ public class CloudPasteADNClient {
             throw new RuntimeException("You gosta specify a value for CloudPasteADNClient.CLIENT_ID, bro.");
         }
         if(sInstance == null) {
-            sInstance = new AppDotNetClient();
+            sInstance = new AppDotNetClient(ADNApplication.getContext());
 
             if(ADNSharedPreferences.isLoggedIn()) {
                 sInstance.setToken(ADNSharedPreferences.getAccessToken());

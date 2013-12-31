@@ -24,7 +24,7 @@ import com.alwaysallthetime.adnlib.QueryParameters;
 import com.alwaysallthetime.adnlib.data.Channel;
 import com.alwaysallthetime.adnlib.data.Message;
 import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
-import com.alwaysallthetime.adnlibutils.MessagePlus;
+import com.alwaysallthetime.adnlibutils.model.MessagePlus;
 import com.alwaysallthetime.adnlibutils.PrivateChannelUtility;
 import com.alwaysallthetime.adnlibutils.manager.MessageManager;
 import com.alwaysallthetime.cloudpaste.adapter.MainListViewAdapter;
@@ -131,7 +131,9 @@ public class MainActivity extends BaseCloudPasteActivity {
 
     private void initMessageManager(Channel channel) {
         if(mMessageManager == null) {
-            mMessageManager = new MessageManager(this, CloudPasteADNClient.getInstance());
+            MessageManager.MessageManagerConfiguration config = new MessageManager.MessageManagerConfiguration();
+            config.setDatabaseInsertionEnabled(true);
+            mMessageManager = new MessageManager(this, CloudPasteADNClient.getInstance(), config);
             mMessageManager.setParameters(channel.getId(), QUERY_PARAMETERS);
         }
     }
@@ -171,7 +173,7 @@ public class MainActivity extends BaseCloudPasteActivity {
             showProgress(R.string.delete_progress);
             Message message = m.getMessage();
 
-            mMessageManager.deleteMessage(message, new MessageManager.MessageDeletionResponseHandler() {
+            mMessageManager.deleteMessage(m, new MessageManager.MessageDeletionResponseHandler() {
                 @Override
                 public void onSuccess() {
                     mHandler.post(new Runnable() {

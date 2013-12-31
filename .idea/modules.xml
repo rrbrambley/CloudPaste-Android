@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLib.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLibModule/ADNLibModule.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLibModule/ADNLibModule.iml" />
       <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLibUtils.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLibUtils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/AsyncGeocoder/AsyncGeocoder.iml" filepath="$PROJECT_DIR$/ADNLibUtils/AsyncGeocoder/AsyncGeocoder.iml" />
       <module fileurl="file://$PROJECT_DIR$/CloudPaste/CloudPaste.iml" filepath="$PROJECT_DIR$/CloudPaste/CloudPaste.iml" />
       <module fileurl="file://$PROJECT_DIR$/CloudPasteProject.iml" filepath="$PROJECT_DIR$/CloudPasteProject.iml" />
     </modules>
