@@ -5,11 +5,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.alwaysallthetime.adnlib.AppDotNetClient;
 import com.alwaysallthetime.adnlib.data.Message;
 import com.alwaysallthetime.adnlib.response.MessageResponseHandler;
-import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
-import com.alwaysallthetime.cloudpaste.client.CloudPasteADNClient;
+import com.alwaysallthetime.messagebeast.ADNSharedPreferences;
 
 public class ShareToCloudPasteActivity extends BaseCloudPasteActivity {
     @Override
@@ -28,14 +26,13 @@ public class ShareToCloudPasteActivity extends BaseCloudPasteActivity {
             if(ADNSharedPreferences.isLoggedIn()) {
                 String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
                 if(sharedText != null) {
-                    AppDotNetClient client = CloudPasteADNClient.getInstance();
-                    CloudPaste.pasteToCloud(sharedText, client, new MessageResponseHandler() {
+                    CloudPaste.pasteToCloud(sharedText, MessageManagerInstance.getInstance(), new MessageResponseHandler() {
                         @Override
                         public void onSuccess(Message responseData) {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(ShareToCloudPasteActivity.this, R.string.copied_toast, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ShareToCloudPasteActivity.this, R.string.saved_toast, Toast.LENGTH_LONG).show();
                                     finish();
                                 }
                             });

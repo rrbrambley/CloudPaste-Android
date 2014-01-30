@@ -18,18 +18,19 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.alwaysallthetime.adnlib.AppDotNetClient;
 import com.alwaysallthetime.adnlib.GeneralParameter;
 import com.alwaysallthetime.adnlib.QueryParameters;
 import com.alwaysallthetime.adnlib.data.Channel;
 import com.alwaysallthetime.adnlib.data.Message;
-import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
-import com.alwaysallthetime.adnlibutils.model.MessagePlus;
-import com.alwaysallthetime.adnlibutils.PrivateChannelUtility;
-import com.alwaysallthetime.adnlibutils.manager.MessageManager;
 import com.alwaysallthetime.cloudpaste.adapter.MainListViewAdapter;
 import com.alwaysallthetime.cloudpaste.client.CloudPasteADNClient;
+import com.alwaysallthetime.messagebeast.ADNSharedPreferences;
+import com.alwaysallthetime.messagebeast.PrivateChannelUtility;
+import com.alwaysallthetime.messagebeast.db.ADNDatabase;
+import com.alwaysallthetime.messagebeast.manager.MessageManager;
+import com.alwaysallthetime.messagebeast.model.MessagePlus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseCloudPasteActivity {
@@ -41,8 +42,6 @@ public class MainActivity extends BaseCloudPasteActivity {
                                 GeneralParameter.INCLUDE_ANNOTATIONS,
                                 GeneralParameter.EXCLUDE_DELETED);
 
-    private AppDotNetClient mClient;
-    private MessageManager mMessageManager;
     private Channel mCloudPasteChannel;
     private Handler mHandler;
     private MainListViewAdapter mListAdapter;
@@ -65,59 +64,41 @@ public class MainActivity extends BaseCloudPasteActivity {
         registerForContextMenu(mListView);
 
         mHandler = new Handler();
-        mClient = CloudPasteADNClient.getInstance();
 
-        initChannel(new Runnable() {
-            @Override
-            public void run() {
-                initMessageManager(PrivateChannelUtility.getChannel(CloudPaste.CLOUDPASTE_CHANNEL_TYPE));
-
-                final String channelId = mCloudPasteChannel.getId();
-                final List<MessagePlus> messages = mMessageManager.getMessageList(channelId);
-                if(messages != null) {
-                    updateListAdapter(messages, false);
-                }
-
-                mMessageManager.retrieveNewestMessages(channelId, mMessageManagerResponseHandler);
-            }
-        });
+        initChannel();
     }
 
-    private void initChannel(final Runnable completionRunnable) {
-        mCloudPasteChannel = PrivateChannelUtility.getChannel(CloudPaste.CLOUDPASTE_CHANNEL_TYPE);
-        if(mCloudPasteChannel == null) {
-            PrivateChannelUtility.retrieveChannel(mClient, CloudPaste.CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelHandler() {
-                @Override
-                public void onResponse(Channel channel) {
-                    if(channel == null) {
-                        PrivateChannelUtility.createChannel(mClient, CloudPaste.CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelHandler() {
-                            @Override
-                            public void onResponse(Channel channel) {
-                                mCloudPasteChannel = channel;
-                                mHandler.post(completionRunnable);
-                            }
-
-                            @Override
-                            public void onError(Exception error) {
-                                showErrorToast();
-                                mHandler.post(completionRunnable);
-                            }
-                        });
-                    } else {
-                        mCloudPasteChannel = channel;
-                        mHandler.post(completionRunnable);
-                    }
-                }
-
-                @Override
-                public void onError(Exception error) {
-                    showErrorToast();
-                    mHandler.post(completionRunnable);
-                }
-            });
-        } else {
-            mHandler.post(completionRunnable);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mCloudPasteChannel != null) {
+            updateListAdapter();
         }
+    }
+
+    private void initChannel() {
+        PrivateChannelUtility.getOrCreateChannel(CloudPasteADNClient.getInstance(), CloudPaste.CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelGetOrCreateHandler() {
+            @Override
+            public void onResponse(Channel channel, boolean createdNewChannel) {
+                mCloudPasteChannel = channel;
+
+                MessageManager messageManager = MessageManagerInstance.getInstance();
+                messageManager.setParameters(channel.getId(), QUERY_PARAMETERS);
+
+                String channelId = mCloudPasteChannel.getId();
+                List<MessagePlus> messages = new ArrayList(messageManager.loadPersistedMessages(channelId, 100).values());
+                if(messages != null) {
+                    updateListAdapter(messages);
+                }
+
+                messageManager.retrieveNewestMessages(channelId, mMessageManagerResponseHandler);
+            }
+
+            @Override
+            public void onError(Exception error) {
+                showErrorToast();
+            }
+        });
     }
 
     private void showErrorToast() {
@@ -129,26 +110,22 @@ public class MainActivity extends BaseCloudPasteActivity {
         });
     }
 
-    private void initMessageManager(Channel channel) {
-        if(mMessageManager == null) {
-            MessageManager.MessageManagerConfiguration config = new MessageManager.MessageManagerConfiguration();
-            config.setDatabaseInsertionEnabled(true);
-            mMessageManager = new MessageManager(this, CloudPasteADNClient.getInstance(), config);
-            mMessageManager.setParameters(channel.getId(), QUERY_PARAMETERS);
-        }
+    private void updateListAdapter() {
+        updateListAdapter(new ArrayList(MessageManagerInstance.getInstance().getMessageMap(mCloudPasteChannel.getId()).values()));
     }
 
-    private void updateListAdapter(List<MessagePlus> messages, boolean appending) {
-        if(mListAdapter == null) {
-            mListAdapter = new MainListViewAdapter(this, messages);
-            mListView.setAdapter(mListAdapter);
-        } else {
-            if(appending) {
-                mListAdapter.appendAndRefresh(messages);
-            } else {
-                mListAdapter.prependAndRefresh(messages);
+    private void updateListAdapter(final List<MessagePlus> messages) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if(mListAdapter == null) {
+                    mListAdapter = new MainListViewAdapter(MainActivity.this, messages);
+                    mListView.setAdapter(mListAdapter);
+                } else {
+                    mListAdapter.refresh(messages);
+                }
             }
-        }
+        });
     }
 
     @Override
@@ -173,7 +150,7 @@ public class MainActivity extends BaseCloudPasteActivity {
             showProgress(R.string.delete_progress);
             Message message = m.getMessage();
 
-            mMessageManager.deleteMessage(m, new MessageManager.MessageDeletionResponseHandler() {
+            MessageManagerInstance.getInstance().deleteMessage(m, new MessageManager.MessageDeletionResponseHandler() {
                 @Override
                 public void onSuccess() {
                     mHandler.post(new Runnable() {
@@ -232,18 +209,14 @@ public class MainActivity extends BaseCloudPasteActivity {
 
     private void deleteAll() {
         showProgress(R.string.delete_progress);
-        PrivateChannelUtility.unsubscribe(mClient, mCloudPasteChannel, new PrivateChannelUtility.PrivateChannelHandler() {
+        PrivateChannelUtility.deactivateChannel(CloudPasteADNClient.getInstance(), mCloudPasteChannel, new PrivateChannelUtility.PrivateChannelHandler() {
             @Override
             public void onResponse(Channel channel) {
-                initChannel(new Runnable() {
+                mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         hideProgress();
-                        if(mCloudPasteChannel != null) { //this indicates success, else failure
-                            mListAdapter = null;
-                            mMessageManager.setParameters(mCloudPasteChannel.getId(), QUERY_PARAMETERS);
-                            mMessageManager.retrieveNewestMessages(mCloudPasteChannel.getId(), mMessageManagerResponseHandler);
-                        }
+                        initChannel();
                     }
                 });
             }
@@ -263,16 +236,15 @@ public class MainActivity extends BaseCloudPasteActivity {
 
     private void refresh() {
         showProgress(R.string.refresh_progess);
-        mMessageManager.clearMessages(mCloudPasteChannel.getId());
-        mMessageManager.retrieveNewestMessages(mCloudPasteChannel.getId(), new MessageManager.MessageManagerResponseHandler() {
+        MessageManagerInstance.getInstance().retrieveNewestMessages(mCloudPasteChannel.getId(), new MessageManager.MessageManagerResponseHandler() {
             @Override
-            public void onSuccess(final List<MessagePlus> responseData, final boolean appended) {
+            public void onSuccess(final List<MessagePlus> responseData) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         hideProgress();
                         mListAdapter = null;
-                        updateListAdapter(responseData, appended);
+                        updateListAdapter();
                     }
                 });
             }
@@ -291,10 +263,8 @@ public class MainActivity extends BaseCloudPasteActivity {
     }
 
     private void signOut() {
-        if(mCloudPasteChannel != null) {
-            ADNSharedPreferences.deletePrivateChannel(mCloudPasteChannel);
-            mMessageManager.clearMessages(mCloudPasteChannel.getId());
-        }
+        MessageManagerInstance.getInstance().clear();
+        ADNDatabase.getInstance(this).deleteAll();
         PrivateChannelUtility.clearChannels();
         ADNSharedPreferences.clearCredentials();
         Intent intent = new Intent(this, LoginWebViewActivity.class);
@@ -317,12 +287,12 @@ public class MainActivity extends BaseCloudPasteActivity {
 
     private final MessageManager.MessageManagerResponseHandler mMessageManagerResponseHandler = new MessageManager.MessageManagerResponseHandler() {
         @Override
-        public void onSuccess(final List<MessagePlus> responseData, final boolean appended) {
+        public void onSuccess(final List<MessagePlus> responseData) {
             mIsLoadingMore = false;
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    updateListAdapter(responseData, appended);
+                    updateListAdapter();
                 }
             });
         }

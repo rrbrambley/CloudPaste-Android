@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
+import com.alwaysallthetime.messagebeast.ADNSharedPreferences;
 
 public class LaunchActivity extends Activity {
 

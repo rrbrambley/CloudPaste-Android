@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.alwaysallthetime.adnlib.data.Token;
-import com.alwaysallthetime.adnlibutils.ADNSharedPreferences;
-import com.alwaysallthetime.adnlibutils.ConfigurationUtility;
 import com.alwaysallthetime.cloudpaste.client.CloudPasteADNClient;
+import com.alwaysallthetime.messagebeast.ADNSharedPreferences;
+import com.alwaysallthetime.messagebeast.ConfigurationUtility;
 
 public abstract class BaseLoginActivity extends Activity {
 

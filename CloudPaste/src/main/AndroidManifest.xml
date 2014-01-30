@@ -12,7 +12,7 @@
         android:targetSdkVersion="18" />
 
     <application
-        android:name="com.alwaysallthetime.adnlibutils.ADNApplication"
+        android:name="com.alwaysallthetime.messagebeast.ADNApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"

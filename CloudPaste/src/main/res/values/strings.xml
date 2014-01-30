@@ -12,7 +12,8 @@
     <string name="menu_sign_out">Sign Out</string>
     <string name="menu_delete">Delete</string>
 
-    <string name="copied_toast">Text was saved to CloudPaste.</string>
+    <string name="saved_toast">Text was saved to CloudPaste.</string>
+    <string name="copied_toast">Text was saved to the clipboard.</string>
 
     <string name="share_progress">Saving text to CloudPaste...</string>
 

@@ -2,6 +2,14 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ADNLibUtils" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ADNLibUtils/ADNLib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ADNLibUtils/AsyncGeocoder" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/MessageBeast-Android" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/MessageBeast-Android/ADNLib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/MessageBeast-Android/AsyncGeocoder" vcs="Git" />
   </component>
 </project>
 

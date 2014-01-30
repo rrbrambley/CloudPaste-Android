@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.alwaysallthetime.adnlibutils.model.MessagePlus;
 import com.alwaysallthetime.cloudpaste.R;
+import com.alwaysallthetime.messagebeast.model.MessagePlus;
 
 import java.util.List;
 
@@ -21,13 +21,9 @@ public class MainListViewAdapter extends ArrayAdapter<MessagePlus> {
         mMessages = messages;
     }
 
-    public void appendAndRefresh(List<MessagePlus> items) {
+    public void refresh(List<MessagePlus> items) {
+        mMessages.clear();
         mMessages.addAll(items);
-        notifyDataSetChanged();
-    }
-
-    public void prependAndRefresh(List<MessagePlus> items) {
-        mMessages.addAll(0,items);
         notifyDataSetChanged();
     }
 

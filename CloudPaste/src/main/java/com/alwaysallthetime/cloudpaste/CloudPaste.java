@@ -4,9 +4,9 @@ import com.alwaysallthetime.adnlib.AppDotNetClient;
 import com.alwaysallthetime.adnlib.data.Channel;
 import com.alwaysallthetime.adnlib.data.Message;
 import com.alwaysallthetime.adnlib.response.MessageResponseHandler;
-import com.alwaysallthetime.adnlibutils.model.MessagePlus;
-import com.alwaysallthetime.adnlibutils.PrivateChannelUtility;
-import com.alwaysallthetime.adnlibutils.manager.MessageManager;
+import com.alwaysallthetime.messagebeast.PrivateChannelUtility;
+import com.alwaysallthetime.messagebeast.manager.MessageManager;
+import com.alwaysallthetime.messagebeast.model.MessagePlus;
 
 import java.util.List;
 
@@ -18,40 +18,19 @@ public class CloudPaste {
     }
 
     public static void pasteToCloud(final String text, final AppDotNetClient client, final MessageResponseHandler responseHandler) {
-        Channel channel = PrivateChannelUtility.getChannel(CLOUDPASTE_CHANNEL_TYPE);
-        if(channel != null) {
-            pasteToCloud(text, client, channel, responseHandler);
-        } else {
-            PrivateChannelUtility.retrieveChannel(client, CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelHandler() {
-                @Override
-                public void onResponse(Channel channel) {
-                    if(channel == null) {
-                        PrivateChannelUtility.createChannel(client, CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelHandler() {
-                            @Override
-                            public void onResponse(Channel channel) {
-                                pasteToCloud(text, client, channel, responseHandler);
-                            }
+        PrivateChannelUtility.getOrCreateChannel(client, CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelGetOrCreateHandler() {
+            @Override
+            public void onResponse(Channel channel, boolean createdNewChannel) {
+                pasteToCloud(text, client, channel, responseHandler);
+            }
 
-                            @Override
-                            public void onError(Exception error) {
-                                if(responseHandler != null) {
-                                    responseHandler.onError(error);
-                                }
-                            }
-                        });
-                    } else {
-                        pasteToCloud(text, client, channel, responseHandler);
-                    }
+            @Override
+            public void onError(Exception error) {
+                if(responseHandler != null) {
+                    responseHandler.onError(error);
                 }
-
-                @Override
-                public void onError(Exception error) {
-                    if(responseHandler != null) {
-                        responseHandler.onError(error);
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
     public static void pasteToCloud(String text, AppDotNetClient client, Channel cloudPasteChannel) {
@@ -77,6 +56,22 @@ public class CloudPaste {
         });
     }
 
+    public static void pasteToCloud(final String text, final MessageManager messageManager, final MessageResponseHandler responseHandler) {
+        PrivateChannelUtility.getOrCreateChannel(messageManager.getClient(), CLOUDPASTE_CHANNEL_TYPE, new PrivateChannelUtility.PrivateChannelGetOrCreateHandler() {
+            @Override
+            public void onResponse(Channel channel, boolean createdNewChannel) {
+                pasteToCloud(text, channel, messageManager, responseHandler);
+            }
+
+            @Override
+            public void onError(Exception error) {
+                if(responseHandler != null) {
+                    responseHandler.onError(error);
+                }
+            }
+        });
+    }
+
     public static void pasteToCloud(final String text, Channel channel, MessageManager messageManager) {
         pasteToCloud(text, channel, messageManager, null);
     }
@@ -84,7 +79,7 @@ public class CloudPaste {
     public static void pasteToCloud(final String text, Channel channel, MessageManager messageManager, final MessageResponseHandler responseHandler) {
         messageManager.createMessage(channel.getId(), new Message(text), new MessageManager.MessageManagerResponseHandler() {
             @Override
-            public void onSuccess(List<MessagePlus> responseData, boolean appended) {
+            public void onSuccess(List<MessagePlus> responseData) {
                 if(responseHandler != null) {
                     responseHandler.onSuccess(responseData.get(0).getMessage());
                 }

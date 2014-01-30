@@ -1,1 +1,1 @@
-include ':CloudPaste', ':ADNLibUtils', ':ADNLibUtils:AsyncGeocoder', ':ADNLibUtils:ADNLib', ':ADNLibUtils:ADNLib:ADNLibModule'
+include ':CloudPaste', ':MessageBeast-Android', ':MessageBeast-Android:AsyncGeocoder', ':MessageBeast-Android:ADNLib', ':MessageBeast-Android:ADNLib:ADNLibModule'

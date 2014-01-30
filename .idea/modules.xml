@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLib.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLibModule/ADNLibModule.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLib/ADNLibModule/ADNLibModule.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/ADNLibUtils.iml" filepath="$PROJECT_DIR$/ADNLibUtils/ADNLibUtils.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ADNLibUtils/AsyncGeocoder/AsyncGeocoder.iml" filepath="$PROJECT_DIR$/ADNLibUtils/AsyncGeocoder/AsyncGeocoder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MessageBeast-Android/ADNLib/ADNLib.iml" filepath="$PROJECT_DIR$/MessageBeast-Android/ADNLib/ADNLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MessageBeast-Android/ADNLib/ADNLibModule/ADNLibModule.iml" filepath="$PROJECT_DIR$/MessageBeast-Android/ADNLib/ADNLibModule/ADNLibModule.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MessageBeast-Android/AsyncGeocoder/AsyncGeocoder.iml" filepath="$PROJECT_DIR$/MessageBeast-Android/AsyncGeocoder/AsyncGeocoder.iml" />
       <module fileurl="file://$PROJECT_DIR$/CloudPaste/CloudPaste.iml" filepath="$PROJECT_DIR$/CloudPaste/CloudPaste.iml" />
       <module fileurl="file://$PROJECT_DIR$/CloudPasteProject.iml" filepath="$PROJECT_DIR$/CloudPasteProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MessageBeast-Android/MessageBeast-Android.iml" filepath="$PROJECT_DIR$/MessageBeast-Android/MessageBeast-Android.iml" />
     </modules>
   </component>
 </project>
